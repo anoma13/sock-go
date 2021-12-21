@@ -1,0 +1,18 @@
+language: go
+
+go:
+  - "1.14.x"
+
+before_install:
+  - cd v3
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
+  - go get github.com/golangci/golangci-lint/cmd/golangci-lint
+
+after_success:
+  - go test ./... -coverprofile=profile.out -covermode=count
+  - PATH=$HOME/gopath/bin:$PATH goveralls -coverprofile=profile.out -service=travis-ci
+
+script:
+  - golangci-lint run
+  - go test ./... -race
